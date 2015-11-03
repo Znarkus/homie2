@@ -23,8 +23,6 @@ def turn_all(mode):
         else:
             device.turn_off()
 
-    # return ''
-
 @post('/turn/<lamp>/<mode>')
 def turn_lamp(lamp, mode):
     if mode == 'on':
@@ -32,7 +30,9 @@ def turn_lamp(lamp, mode):
     else:
         lamps[lamp].turn_off()
 
-    # return ''
+@post('/dim/<lamp>/<level>')
+def turn_lamp(lamp, level):
+    lamps[lamp].dim(level * 2.55)
 
 @get('/')
 def send_static():
