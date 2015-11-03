@@ -32,7 +32,10 @@ def turn_lamp(lamp, mode):
 
 @post('/dim/<lamp>/<level:int>')
 def turn_lamp(lamp, level):
-    lamps[lamp].dim(int(level * 2.55))
+    if (level == 0):
+        lamps[lamp].turn_off()
+    else:
+        lamps[lamp].dim(int(level * 2.55))
 
 @get('/')
 def send_static():
