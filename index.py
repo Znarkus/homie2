@@ -42,4 +42,4 @@ def send_static():
 def send_static(filename):
     return static_file(filename, root='bower_components')
 
-run(host='localhost', port=8888)
+run(host='0.0.0.0', port=8888)
