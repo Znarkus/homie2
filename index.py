@@ -37,6 +37,14 @@ def turn_lamp(lamp, level):
     else:
         lamps[lamp].dim(int(level * 2.55))
 
+@post('/dim/<level:int>')
+def dim_all(level):
+    for device in core.devices():
+        if (level == 0):
+            device.turn_off()
+        else:
+            device.dim(int(level * 2.55))
+
 @get('/')
 def send_static():
     return static_file('index.html', root='www')
