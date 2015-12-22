@@ -1,53 +1,49 @@
-from tellcore.telldus import TelldusCore
+from tellcore.telldus import TelldusCore, DeviceFactory
 from bottle import get, post, run, template, static_file
+import tellcore.constants as const
 
 core = TelldusCore()
-lamps = {
-    'taklampor': core.add_device("Taklampor", "arctech", "selflearning-dimmer", house=13, unit=1),
-    'byra': core.add_device("Byrå", "arctech", "selflearning-dimmer", house=21079520, unit=1),
-    'bordslampor': core.add_device("Bordslampor", "arctech", "selflearning-switch", house=12345, unit=11)
-}
 
-# lamp.turn_on()
-# lamp2.turn_on()
-# lamp3.turn_on()
-#
-# for device in core.devices():
-#     device.turn_off()
+def dim(device, level):
+    if (level == 0):
+        device.turn_off()
+    else:
+        device.dim(int(level * 2.55))
+
+def turn(device, mode):
+    if mode == 'on':
+        device.turn_on()
+    else:
+        device.turn_off()
 
 @post('/all/<mode>')
 def turn_all(mode):
     for device in core.devices():
-        if mode == 'on':
-            device.turn_on()
-        else:
-            device.turn_off()
+        turn(device, mode)
 
-@post('/turn/<lamp>/<mode>')
+@post('/turn/<lamp:int>/<mode>')
 def turn_lamp(lamp, mode):
-    if mode == 'on':
-        lamps[lamp].turn_on()
-    else:
-        lamps[lamp].turn_off()
+    turn(DeviceFactory(lamp), mode)
 
-@post('/dim/<lamp>/<level:int>')
+@post('/dim/<lamp:int>/<level:int>')
 def turn_lamp(lamp, level):
-    if (level == 0):
-        lamps[lamp].turn_off()
-    else:
-        lamps[lamp].dim(int(level * 2.55))
+    dim(DeviceFactory(lamp), level)
 
 @post('/dim/<level:int>')
 def dim_all(level):
     for device in core.devices():
-        if (level == 0):
-            device.turn_off()
+        if device.methods(const.TELLSTICK_DIM):
+            dim(device, level)
         else:
-            device.dim(int(level * 2.55))
+            if level >= 50:
+                turn(device, 'on')
+            else:
+                turn(device, 'off')
 
 @get('/')
 def send_static():
     return static_file('index.html', root='www')
+    # return template('index', devices=core.devices())
 
 @get('/lib/<filename:path>')
 def send_static(filename):

@@ -76,51 +76,53 @@
     </section>
 
 
+    % for device in devices:
     <section>
-        <h2>Taklampor</h2>
+        <h2>{{device.name}}</h2>
 
-        <form action="dim/1/0" method="post">
+        <form action="dim/taklampor/0" method="post">
             <button type="submit">0</button>
         </form>
 
-        <form action="dim/1/25" method="post">
+        <form action="dim/taklampor/25" method="post">
             <button type="submit">25</button>
         </form>
 
-        <form action="dim/1/50" method="post">
+        <form action="dim/taklampor/50" method="post">
             <button type="submit">50</button>
         </form>
 
-        <form action="dim/1/75" method="post">
+        <form action="dim/taklampor/75" method="post">
             <button type="submit">75</button>
         </form>
 
-        <form action="dim/1/100" method="post">
+        <form action="dim/taklampor/100" method="post">
             <button type="submit">100</button>
         </form>
     </section>
+    % end
 
 
     <section>
         <h2>Byrå</h2>
 
-        <form action="dim/2/0" method="post">
+        <form action="dim/byra/0" method="post">
             <button type="submit">0</button>
         </form>
 
-        <form action="dim/2/25" method="post">
+        <form action="dim/byra/25" method="post">
             <button type="submit">25</button>
         </form>
 
-        <form action="dim/2/50" method="post">
+        <form action="dim/byra/50" method="post">
             <button type="submit">50</button>
         </form>
 
-        <form action="dim/2/75" method="post">
+        <form action="dim/byra/75" method="post">
             <button type="submit">75</button>
         </form>
 
-        <form action="dim/2/100" method="post">
+        <form action="dim/byra/100" method="post">
             <button type="submit">100</button>
         </form>
     </section>
@@ -129,11 +131,11 @@
     <section>
         <h2>Bordslampor</h2>
 
-        <form action="turn/3/off" method="post">
+        <form action="turn/bordslampor/off" method="post">
             <button type="submit">Off</button>
         </form>
 
-        <form action="turn/3/on" method="post">
+        <form action="turn/bordslampor/on" method="post">
             <button type="submit">On</button>
         </form>
     </section>
