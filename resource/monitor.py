@@ -3,6 +3,7 @@ from subprocess import Popen, PIPE
 import re
 import threading
 import time
+import argparse
 
 
 class PhonePing(threading.Thread):
@@ -12,6 +13,8 @@ class PhonePing(threading.Thread):
         self.ip_address = ip_address
 
     def run(self):
+        lost_since = None
+
         while True:
             s = socket.socket()
             s.settimeout(5)
@@ -24,16 +27,23 @@ class PhonePing(threading.Thread):
             # print(nmap_output)
             #
             # if 'Host is up.' in nmap_output:
-            #     print(time.ctime(), 'Ping Success')
+            # print(time.ctime(), 'Ping Success')
             # else:
             #     print(time.ctime(), 'Ping Failed')
 
             try:
                 s.connect((self.ip_address, 62078))
-                print(time.ctime(), 'Ping Success')
+                # print(time.ctime(), 'Ping Success')
+
+                if lost_since:
+                    print('Found again after', round(time.time() - lost_since), 'seconds')
+                    lost_since = None
+
             except Exception as e:
                 # print(time.ctime(), 'Ping Failed:', e)
-                pass
+                if not lost_since:
+                    print('Lost')
+                    lost_since = time.time()
 
             s.close()
 
@@ -77,11 +87,33 @@ def disc_detect():
         workers[mac_string] = PhonePing(ip_address)
         workers[mac_string].start()
 
-mac_addresses = ['90:8d:6c:ce:42:85']
-workers = {}
 
-try:
-    while True:
-        disc_detect()
-except KeyboardInterrupt:
-    pass
+parser = argparse.ArgumentParser()
+parser.add_argument('--ip', help='list of IP addresses', nargs='*')
+parser.add_argument('--mac', help='list of MAC addresses', nargs='*', default=[])
+args = parser.parse_args()
+
+if args.ip:
+    workers = []
+
+    for ip in args.ip:
+        worker = PhonePing(ip)
+        worker.start()
+        workers.append(worker)
+
+    try:
+        while True:
+            pass
+    except KeyboardInterrupt:
+        pass
+
+else:
+    # mac_addresses = ['90:8d:6c:ce:42:85']
+    workers = {}
+    mac_addresses = args.mac
+
+    try:
+        while True:
+            disc_detect()
+    except KeyboardInterrupt:
+        pass
