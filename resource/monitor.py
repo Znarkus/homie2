@@ -14,6 +14,7 @@ class PhonePing(threading.Thread):
 
     def run(self):
         lost_since = None
+        record_lost_time = 0
 
         while True:
             s = socket.socket()
@@ -36,13 +37,18 @@ class PhonePing(threading.Thread):
                 # print(time.ctime(), 'Ping Success')
 
                 if lost_since:
-                    print('Found again after', round(time.time() - lost_since), 'seconds')
+                    lost_time = round(time.time() - lost_since)
                     lost_since = None
+
+                    if lost_time > record_lost_time:
+                        record_lost_time = lost_time
+
+                    print(time.ctime(), '- Found again after', lost_time, 'seconds (Record:', record_lost_time, 'seconds)')
 
             except Exception as e:
                 # print(time.ctime(), 'Ping Failed:', e)
                 if not lost_since:
-                    print('Lost')
+                    print(time.ctime(), '- Lost')
                     lost_since = time.time()
 
             s.close()
