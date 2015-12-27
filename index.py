@@ -17,7 +17,7 @@ config = {
 
 
 def dim(device, level):
-    print('Dimming', device.name, 'to', level)
+    # print('Dimming', device.name, 'to', level)
 
     if (level == 0):
         device.turn_off()
@@ -26,7 +26,7 @@ def dim(device, level):
 
 
 def turn(device, mode):
-    print('Turning', mode, device.name)
+    # print('Turning', mode, device.name)
 
     if mode == 'on':
         device.turn_on()
