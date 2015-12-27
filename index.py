@@ -144,27 +144,27 @@ def queue_worker():
         work_queue.task_done()
 
 
-class PhonePing(threading.Thread):
-    def __init__(self):
-        super(PhonePing, self).__init__()
-        self.daemon = True
-
-    def run(self):
-        while True:
-            ip = ip_queue.get()
-            s = socket.socket()
-            s.settimeout(1)
-
-            try:
-                s.connect((ip, 62078))
-                print(time.ctime(), 'Ping Success')
-            except Exception as e:
-                print(time.ctime(), 'Ping Failed:', e)
-
-            s.close()
-            ip_queue.task_done()
-            time.sleep(5)
-            ip_queue.put(ip)
+# class PhonePing(threading.Thread):
+#     def __init__(self):
+#         super(PhonePing, self).__init__()
+#         self.daemon = True
+#
+#     def run(self):
+#         while True:
+#             ip = ip_queue.get()
+#             s = socket.socket()
+#             s.settimeout(1)
+#
+#             try:
+#                 s.connect((ip, 62078))
+#                 print(time.ctime(), 'Ping Success')
+#             except Exception as e:
+#                 print(time.ctime(), 'Ping Failed:', e)
+#
+#             s.close()
+#             ip_queue.task_done()
+#             time.sleep(5)
+#             ip_queue.put(ip)
 
 
 
@@ -191,13 +191,13 @@ web_thread.daemon = True
 worker_thread = threading.Thread(target=queue_worker)
 worker_thread.daemon = True
 
-phone_ping = PhonePing()
+# phone_ping = PhonePing()
 
 # run(host='0.0.0.0', port=8888)
 try:
     web_thread.start()
     worker_thread.start()
-    phone_ping.start()
+    # phone_ping.start()
 
     # while web_thread.is_alive():
     # pass
