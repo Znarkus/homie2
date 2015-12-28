@@ -13,8 +13,9 @@ class PhonePing(threading.Thread):
         self.ip_address = ip_address
 
     def run(self):
-        lost_since = None
+        lost_since = None   # None == Not lost. Number == time that we lost phone.
         record_lost_time = 0
+        at_home = None
 
         while True:
             s = socket.socket()
@@ -45,17 +46,25 @@ class PhonePing(threading.Thread):
 
                     print(time.ctime(), '- Found again after', lost_time, 'seconds (Record:', record_lost_time, 'seconds)')
 
+                    if at_home == False:
+                        print('Home again')
+
+                    at_home = True
+
             except Exception as e:
                 # print(time.ctime(), 'Ping Failed:', e)
                 if not lost_since:
                     print(time.ctime(), '- Lost')
                     lost_since = time.time()
 
-            s.close()
+                elif at_home and time.time() - lost_since > 3000:
+                    print('Left home')
+                    at_home = False
 
+            s.close()
             elapsed = time.time() - start
 
-            if elapsed > 0 and elapsed < 5:
+            if 0 < elapsed < 5:
                 time.sleep(5 - elapsed)
 
 
