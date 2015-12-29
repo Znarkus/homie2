@@ -48,7 +48,7 @@ class PhonePing(threading.Thread):
                     print(time.ctime(), '- Found again after', lost_time, 'seconds (Record:', record_lost_time, 'seconds)')
 
                     if at_home is False:
-                        print('Home again')
+                        print(time.ctime(), '- Home again')
                         at_home = True
 
                         if args.back_home_post_url:
@@ -62,7 +62,7 @@ class PhonePing(threading.Thread):
 
                 # If at home or at home was never set, and we've reached the time limit
                 elif (at_home or at_home is None) and time.time() - lost_since > 3000:
-                    print('Left home')
+                    print(time.ctime(), '- Left home')
                     at_home = False
 
                     if args.left_home_post_url:
