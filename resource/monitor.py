@@ -4,6 +4,7 @@ import re
 import threading
 import time
 import argparse
+import requests
 
 
 class PhonePing(threading.Thread):
@@ -46,10 +47,12 @@ class PhonePing(threading.Thread):
 
                     print(time.ctime(), '- Found again after', lost_time, 'seconds (Record:', record_lost_time, 'seconds)')
 
-                    if at_home == False:
+                    if at_home is False:
                         print('Home again')
+                        at_home = True
 
-                    at_home = True
+                        if args.back_home_post_url:
+                            requests.post(args.back_home_post_url)
 
             except Exception as e:
                 # print(time.ctime(), 'Ping Failed:', e)
@@ -57,9 +60,13 @@ class PhonePing(threading.Thread):
                     print(time.ctime(), '- Lost')
                     lost_since = time.time()
 
-                elif at_home and time.time() - lost_since > 3000:
+                # If at home or at home was never set, and we've reached the time limit
+                elif (at_home or at_home is None) and time.time() - lost_since > 3000:
                     print('Left home')
                     at_home = False
+
+                    if args.left_home_post_url:
+                        requests.post(args.left_home_post_url)
 
             s.close()
             elapsed = time.time() - start
@@ -106,7 +113,10 @@ def disc_detect():
 parser = argparse.ArgumentParser()
 parser.add_argument('--ip', help='list of IP addresses', nargs='*')
 parser.add_argument('--mac', help='list of MAC addresses', nargs='*', default=[])
+parser.add_argument('--left-home-post-url', help='url to POST to when left home')
+parser.add_argument('--back-home-post-url', help='url to POST to when back home')
 args = parser.parse_args()
+print('Options:', args)
 
 if args.ip:
     workers = []

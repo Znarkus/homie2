@@ -168,22 +168,22 @@ def queue_worker():
 
 
 
-try:
-    import asyncio
+# try:
+#     import asyncio
+#
+#     loop = asyncio.get_event_loop()
+#     dispatcher = td.AsyncioCallbackDispatcher(loop)
+# except ImportError:
+#     loop = None
+#     dispatcher = td.QueuedCallbackDispatcher()
 
-    loop = asyncio.get_event_loop()
-    dispatcher = td.AsyncioCallbackDispatcher(loop)
-except ImportError:
-    loop = None
-    dispatcher = td.QueuedCallbackDispatcher()
-
-# core = TelldusCore()
+core = TelldusCore()
 ip_queue = Queue()
 ip_queue.put('10.0.0.73')
 
 work_queue = Queue()
-core = TelldusCore(callback_dispatcher=dispatcher)
-callbacks = [core.register_raw_device_event(raw_event)]
+# core = TelldusCore(callback_dispatcher=dispatcher)
+# callbacks = [core.register_raw_device_event(raw_event)]
 
 web_thread = threading.Thread(target=run, kwargs={'host': '0.0.0.0', 'port': 8888})
 web_thread.daemon = True
@@ -199,14 +199,14 @@ try:
     worker_thread.start()
     # phone_ping.start()
 
-    # while web_thread.is_alive():
-    # pass
-    if loop:
-        loop.run_forever()
-    else:
-        while True:
-            core.callback_dispatcher.process_pending_callbacks()
-            time.sleep(0.5)
+    while web_thread.is_alive():
+        pass
+    # if loop:
+    #     loop.run_forever()
+    # else:
+    #     while True:
+    #         core.callback_dispatcher.process_pending_callbacks()
+    #         time.sleep(0.5)
 except KeyboardInterrupt:
     pass
     # print('KeyboardInterrupt!')
