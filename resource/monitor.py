@@ -42,17 +42,18 @@ class PhonePing(threading.Thread):
                     lost_time = round(time.time() - lost_since)
                     lost_since = None
 
-                    if lost_time > record_lost_time:
-                        record_lost_time = lost_time
-
-                    print(time.ctime(), '- Found again after', lost_time, 'seconds (Record:', record_lost_time, 'seconds)')
-
                     if at_home is False:
                         print(time.ctime(), '- Home again')
                         at_home = True
 
                         if args.back_home_post_url:
                             requests.post(args.back_home_post_url)
+                    
+                    # Only log record lost time for when phone is still counted as home
+                    elif lost_time > record_lost_time:
+                        record_lost_time = lost_time
+
+                    print(time.ctime(), '- Found again after', lost_time, 'seconds (Record:', record_lost_time, 'seconds)')
 
             except Exception as e:
                 # print(time.ctime(), 'Ping Failed:', e)
