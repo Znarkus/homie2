@@ -15,35 +15,57 @@
     <![endif]-->
 
     <style>
-        @-webkit-keyframes super-rainbow {
-            0%   { background: #D9EDF7; }
-            20%  { background: #D9F7EA; }
-            40%  { background: #EBF7D9; }
-            60%  { background: #F7E7D9; }
-            80%  { background: #F7D9E6; }
-            100% { background: #F0D9F7; }
+        #loader {
+          font-size: 5px;
+          position: absolute;
+          display: none;
+          right: 20px;
+          top: 20px;
+          text-indent: -9999em;
+          border-top: 1.1em solid rgba(0, 0, 0, 0.1);
+          border-right: 1.1em solid rgba(0, 0, 0, 0.1);
+          border-bottom: 1.1em solid rgba(0, 0, 0, 0.1);
+          border-left: 1.1em solid rgba(0, 0, 0, 0.4);
+          -webkit-transform: translateZ(0);
+          -ms-transform: translateZ(0);
+          transform: translateZ(0);
+          -webkit-animation: load8 1.1s infinite linear;
+          animation: load8 1.1s infinite linear;
+        }
+        #loader,
+        #loader:after {
+          border-radius: 50%;
+          width: 6em;
+          height: 6em;
+        }
+        @-webkit-keyframes load8 {
+          0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+          }
+          100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+          }
+        }
+        @keyframes load8 {
+          0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+          }
+          100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+          }
         }
 
-        @-moz-keyframes super-rainbow {
-            0%   { background: #D9EDF7; }
-            20%  { background: #D9F7EA; }
-            40%  { background: #EBF7D9; }
-            60%  { background: #F7E7D9; }
-            80%  { background: #F7D9E6; }
-            100% { background: #F0D9F7; }
-        }
-
-        button.working {
-             -webkit-animation: super-rainbow 15s infinite alternate linear;
-             -moz-animation: super-rainbow 15s infinite alternate linear;
-        }
     </style>
 </head>
 <body>
 
 <div class="container theme-showcase" role="main">
 
-    <div id="status"></div>
+    <div id="loader">Loading...</div>
 
     <section>
         <h2>All</h2>
@@ -94,12 +116,10 @@
 		$('button').click(function () {
 			var $this = $(this);
 
-            $this.addClass('working');
-			//$('#status').text('Working..').show();
+			$('#loader').show();
 
 			$.post($this.data('url'), function() {
-				//$('#status').fadeOut();
-				$this.removeClass('working');
+				$('#loader').fadeOut();
 			});
 		});
 
