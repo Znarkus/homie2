@@ -17,7 +17,7 @@ config = {
 
 
 def dim(device, level):
-    # print('Dimming', device.name, 'to', level)
+    print('Dimming', device.name, 'to', level)
 
     if (level == 0):
         device.turn_off()
@@ -26,7 +26,7 @@ def dim(device, level):
 
 
 def turn(device, mode):
-    # print('Turning', mode, device.name)
+    print('Turning', mode, device.name)
 
     if mode == 'on':
         device.turn_on()
@@ -144,46 +144,24 @@ def queue_worker():
         work_queue.task_done()
 
 
-# class PhonePing(threading.Thread):
-#     def __init__(self):
-#         super(PhonePing, self).__init__()
-#         self.daemon = True
-#
-#     def run(self):
-#         while True:
-#             ip = ip_queue.get()
-#             s = socket.socket()
-#             s.settimeout(1)
-#
-#             try:
-#                 s.connect((ip, 62078))
-#                 print(time.ctime(), 'Ping Success')
-#             except Exception as e:
-#                 print(time.ctime(), 'Ping Failed:', e)
-#
-#             s.close()
-#             ip_queue.task_done()
-#             time.sleep(5)
-#             ip_queue.put(ip)
+
+try:
+    import asyncio
+
+    loop = asyncio.get_event_loop()
+    dispatcher = td.AsyncioCallbackDispatcher(loop)
+except ImportError:
+    loop = None
+    dispatcher = td.QueuedCallbackDispatcher()
 
 
-
-# try:
-#     import asyncio
-#
-#     loop = asyncio.get_event_loop()
-#     dispatcher = td.AsyncioCallbackDispatcher(loop)
-# except ImportError:
-#     loop = None
-#     dispatcher = td.QueuedCallbackDispatcher()
-
-core = TelldusCore()
 ip_queue = Queue()
 ip_queue.put('10.0.0.73')
 
 work_queue = Queue()
-# core = TelldusCore(callback_dispatcher=dispatcher)
-# callbacks = [core.register_raw_device_event(raw_event)]
+# core = TelldusCore()
+core = TelldusCore(callback_dispatcher=dispatcher)
+callbacks = [core.register_raw_device_event(raw_event)]
 
 web_thread = threading.Thread(target=run, kwargs={'host': '0.0.0.0', 'port': 8888})
 web_thread.daemon = True
@@ -191,22 +169,21 @@ web_thread.daemon = True
 worker_thread = threading.Thread(target=queue_worker)
 worker_thread.daemon = True
 
-# phone_ping = PhonePing()
-
 # run(host='0.0.0.0', port=8888)
 try:
     web_thread.start()
     worker_thread.start()
-    # phone_ping.start()
 
-    while web_thread.is_alive():
-        pass
-    # if loop:
-    #     loop.run_forever()
-    # else:
-    #     while True:
-    #         core.callback_dispatcher.process_pending_callbacks()
-    #         time.sleep(0.5)
+    # web_thread.join()
+    # worker_thread.join()
+    if loop:
+        print('Asyncio')
+        loop.run_forever()
+    else:
+        print('Legacy')
+        while True:
+            core.callback_dispatcher.process_pending_callbacks()
+            time.sleep(0.5)
 except KeyboardInterrupt:
     pass
     # print('KeyboardInterrupt!')
