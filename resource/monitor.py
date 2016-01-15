@@ -63,7 +63,7 @@ class PhonePing(threading.Thread):
                     lost_since = time.time()
 
                 # If at home or at home was never set, and we've reached the time limit
-                elif (at_home or at_home is None) and time.time() - lost_since > 3000:
+                elif (at_home or at_home is None) and time.time() - lost_since > 1800:
                     print(time.ctime(), '- Left home')
                     at_home = False
 
