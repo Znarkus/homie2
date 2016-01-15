@@ -11,3 +11,10 @@ cd homie2
 pip3 install -r requirements.txt
 bower i
 ```
+
+## Contribute
+Use [nodemon](https://github.com/remy/nodemon) to automatically restart the service.
+
+```
+nodemon index.py
+```

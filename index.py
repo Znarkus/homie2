@@ -96,8 +96,8 @@ def remote2(mode):
 
 @get('/')
 def send_static():
-    return static_file('index.html', root='www')
-    # return template('index', devices=core.devices())
+    # return static_file('index.html', root='www')
+    return template('index', devices=core.devices())
 
 
 @get('/lib/<filename:path>')
@@ -186,6 +186,3 @@ try:
             time.sleep(0.5)
 except KeyboardInterrupt:
     pass
-    # print('KeyboardInterrupt!')
-    # web_thread.join()
-    # print('Joined')

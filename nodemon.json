@@ -1,0 +1,6 @@
+{
+  "verbose": true,
+  "ignore": [".idea/*"],
+  "ext": "py tpl css html",
+  "exec": "python3"
+}

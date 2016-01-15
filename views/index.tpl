@@ -1,78 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, user-scalable=no">
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<title>HOMIE 2</title>
-    <link href="lib/normalize-css/normalize.css" rel="stylesheet" type="text/css" />
-	<style>
-		body, button {
-			font-size: 20px;
-            line-height: 1em;
-		}
-		button {
-			margin-right: 2px;
-            padding: 0px;
-		}
-		#status {
-			position: absolute;
-			top: 0;
-			right: 0;
-			padding: 10px;
-			background: #fff;
-			font-family: sans-serif;
-		}
-        form {
-            display: inline-block;
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>HOMIE 2</title>
+
+    <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+        @-webkit-keyframes super-rainbow {
+            0%   { background: #D9EDF7; }
+            20%  { background: #D9F7EA; }
+            40%  { background: #EBF7D9; }
+            60%  { background: #F7E7D9; }
+            80%  { background: #F7D9E6; }
+            100% { background: #F0D9F7; }
         }
-        section {
-            padding: 10px;
-            clear: both;
+
+        @-moz-keyframes super-rainbow {
+            0%   { background: #D9EDF7; }
+            20%  { background: #D9F7EA; }
+            40%  { background: #EBF7D9; }
+            60%  { background: #F7E7D9; }
+            80%  { background: #F7D9E6; }
+            100% { background: #F0D9F7; }
         }
-        hr {
-            clear: both;
+
+        button.working {
+             -webkit-animation: super-rainbow 15s infinite alternate linear;
+             -moz-animation: super-rainbow 15s infinite alternate linear;
         }
-        h2 {
-            margin: 10px 0 5px;
-        }
-	</style>
+    </style>
 </head>
 <body>
 
-	<div id="status"></div>
+<div class="container theme-showcase" role="main">
+
+    <div id="status"></div>
 
     <section>
         <h2>All</h2>
+        <div class="btn-group btn-group" role="group">
+            <button type="button" class="btn btn-default" data-url="all/off">Off</button>
+            <button type="button" class="btn btn-default" data-url="all/on">On</button>
+        </div>
 
-        <form action="all/off" method="post">
-            <button type="submit">Off</button>
-        </form>
-
-        <form action="all/on" method="post">
-            <button type="submit">On</button>
-        </form>
-    </section>
-    <section>
-        <form action="dim/0" method="post">
-            <button type="submit">0</button>
-        </form>
-
-        <form action="dim/25" method="post">
-            <button type="submit">25</button>
-        </form>
-
-        <form action="dim/50" method="post">
-            <button type="submit">50</button>
-        </form>
-
-        <form action="dim/75" method="post">
-            <button type="submit">75</button>
-        </form>
-
-        <form action="dim/100" method="post">
-            <button type="submit">100</button>
-        </form>
+        <div class="btn-group btn-group" role="group">
+            <button type="button" class="btn btn-default" data-url="dim/0">0</button>
+            <button type="button" class="btn btn-default" data-url="dim/25">25</button>
+            <button type="button" class="btn btn-default" data-url="dim/50">50</button>
+            <button type="button" class="btn btn-default" data-url="dim/75">75</button>
+            <button type="button" class="btn btn-default" data-url="dim/100">100</button>
+        </div>
     </section>
 
 
@@ -80,85 +66,43 @@
     <section>
         <h2>{{device.name}}</h2>
 
-        <form action="dim/taklampor/0" method="post">
-            <button type="submit">0</button>
-        </form>
-
-        <form action="dim/taklampor/25" method="post">
-            <button type="submit">25</button>
-        </form>
-
-        <form action="dim/taklampor/50" method="post">
-            <button type="submit">50</button>
-        </form>
-
-        <form action="dim/taklampor/75" method="post">
-            <button type="submit">75</button>
-        </form>
-
-        <form action="dim/taklampor/100" method="post">
-            <button type="submit">100</button>
-        </form>
+        <div class="btn-group btn-group-lg" role="group">
+        % if device.model == 'selflearning-switch':
+            <button type="button" class="btn btn-default" data-url="turn/{{device.id}}/off">Off</button>
+            <button type="button" class="btn btn-default" data-url="turn/{{device.id}}/on">On</button>
+        % elif device.model == 'selflearning-dimmer':
+            <button type="button" class="btn btn-default" data-url="dim/{{device.id}}/0">0</button>
+            <button type="button" class="btn btn-default" data-url="dim/{{device.id}}/25">25</button>
+            <button type="button" class="btn btn-default" data-url="dim/{{device.id}}/50">50</button>
+            <button type="button" class="btn btn-default" data-url="dim/{{device.id}}/75">75</button>
+            <button type="button" class="btn btn-default" data-url="dim/{{device.id}}/100">100</button>
+        % end
+        </div>
     </section>
     % end
 
+</div>
 
-    <section>
-        <h2>Byrå</h2>
-
-        <form action="dim/byra/0" method="post">
-            <button type="submit">0</button>
-        </form>
-
-        <form action="dim/byra/25" method="post">
-            <button type="submit">25</button>
-        </form>
-
-        <form action="dim/byra/50" method="post">
-            <button type="submit">50</button>
-        </form>
-
-        <form action="dim/byra/75" method="post">
-            <button type="submit">75</button>
-        </form>
-
-        <form action="dim/byra/100" method="post">
-            <button type="submit">100</button>
-        </form>
-    </section>
-
-
-    <section>
-        <h2>Bordslampor</h2>
-
-        <form action="turn/bordslampor/off" method="post">
-            <button type="submit">Off</button>
-        </form>
-
-        <form action="turn/bordslampor/on" method="post">
-            <button type="submit">On</button>
-        </form>
-    </section>
-
-
-	<script src="lib/jquery/dist/jquery.min.js"></script>
-	<script src="lib/fastclick/lib/fastclick.js"></script>
-	<script>
+<script src="lib/jquery/dist/jquery.min.js"></script>
+<script src="lib/fastclick/lib/fastclick.js"></script>
+<script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script>
 		$(function() {
 			FastClick.attach(document.body);
 		});
 
-		$('form').submit(function () {
+		$('button').click(function () {
 			var $this = $(this);
 
-			$('#status').text('Working..').show();
+            $this.addClass('working');
+			//$('#status').text('Working..').show();
 
-			$.post($this.attr('action'), function() {
-				$('#status').fadeOut();
+			$.post($this.data('url'), function() {
+				//$('#status').fadeOut();
+				$this.removeClass('working');
 			});
-
-			return false;
 		});
-	</script>
+
+</script>
 </body>
 </html>
