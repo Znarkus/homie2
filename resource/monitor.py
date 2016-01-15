@@ -14,7 +14,7 @@ class PhonePing(threading.Thread):
         self.ip_address = ip_address
 
     def run(self):
-        lost_since = None   # None == Not lost. Number == time that we lost phone.
+        lost_since = None  # None == Not lost. Number == time that we lost phone.
         record_lost_time = 0
         at_home = None
 
@@ -48,12 +48,13 @@ class PhonePing(threading.Thread):
 
                         if args.back_home_post_url:
                             requests.post(args.back_home_post_url)
-                    
+
                     # Only log record lost time for when phone is still counted as home
                     elif lost_time > record_lost_time:
                         record_lost_time = lost_time
 
-                    print(time.ctime(), '- Found again after', lost_time, 'seconds (Record:', record_lost_time, 'seconds)')
+                    print(time.ctime(), '- Found again after', lost_time, 'seconds (Record:', record_lost_time,
+                          'seconds)')
 
             except Exception as e:
                 # print(time.ctime(), 'Ping Failed:', e)
@@ -111,7 +112,8 @@ def disc_detect():
         workers[mac_string].start()
 
 
-parser = argparse.ArgumentParser()
+description = 'Example:\npython3 resource/monitor.py \\\n\t--ip 10.0.0.73 \\\n\t--left-home-post-url http://localhost:8888/all/off \\\n\t--back-home-post-url http://localhost:8888/dim/75'
+parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description=description)
 parser.add_argument('--ip', help='list of IP addresses', nargs='*')
 parser.add_argument('--mac', help='list of MAC addresses', nargs='*', default=[])
 parser.add_argument('--left-home-post-url', help='url to POST to when left home')
@@ -128,8 +130,8 @@ if args.ip:
         workers.append(worker)
 
     try:
-        while True:
-            pass
+        for worker in workers:
+            worker.join()
     except KeyboardInterrupt:
         pass
 
